@@ -47,7 +47,6 @@ func main() {
 	})
 
 	redis := database.NewRedisClient()
-	redisClient := redis.GetRedisClient()
 
 	// run migrations
 	err := migrations.RunMigration(db.GetDB())
@@ -58,13 +57,13 @@ func main() {
 	db.LoadSchemaFields()
 
 	// cronjob
-	go routine.ProductRecommendation(db, redisClient)
+	go routine.ProductRecommendation(db, redis.GetRedisClient())
 
 	c := cron.New(cron.WithSeconds())
-	initCronJob(c, config, db, redisClient)
+	initCronJob(c, config, db, redis.GetRedisClient())
 	c.Start()
 
-	r := server.New(db, redisClient)
+	r := server.New(db, redis.GetRedisClient())
 
 	versionGroup := r.Group("/v" + constants.CurrentVersion[0:1])
 	// auth
