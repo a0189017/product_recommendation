@@ -11,5 +11,5 @@ type AuthUsecase struct {
 }
 
 func NewAuthUsecase(db database.DBInterface) *AuthUsecase {
-	return &AuthUsecase{db: db, authRepository: auth.NewAuthRepository(db.GetDB())}
+	return &AuthUsecase{authRepository: auth.NewAuthRepository(db.GetDB())}
 }

@@ -13,30 +13,29 @@ var redisClient *redis.Client
 var once sync.Once
 
 type RedisClientInterface interface {
-	GetRedisClient() *redis.Client
 	RedisPing(ctx context.Context) error
+	GetRedisClient() *redis.Client
 }
 
 type RedisClient struct {
-	redisClient *redis.Client
+	RedisClient *redis.Client
 }
 
 func NewRedisClient() RedisClientInterface {
-	return &RedisClient{}
-}
-
-func (r *RedisClient) GetRedisClient() *redis.Client {
-	once.Do(func() {
-		config := config.GetConfig()
-		r.redisClient = redis.NewClient(&redis.Options{
+	config := config.GetConfig()
+	return &RedisClient{
+		RedisClient: redis.NewClient(&redis.Options{
 			Addr:     fmt.Sprintf("%s:%s", config.Redis.Host, config.Redis.Port),
 			Password: config.Redis.Password,
 			DB:       config.Redis.DB,
-		})
-	})
-	return redisClient
+		}),
+	}
+}
+
+func (r *RedisClient) GetRedisClient() *redis.Client {
+	return r.RedisClient
 }
 
 func (r *RedisClient) RedisPing(ctx context.Context) error {
-	return r.redisClient.Ping(ctx).Err()
+	return r.RedisClient.Ping(ctx).Err()
 }

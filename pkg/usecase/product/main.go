@@ -15,8 +15,6 @@ type ProductUsecase struct {
 
 func NewProductUsecase(db database.DBInterface, redis *redis.Client) *ProductUsecase {
 	return &ProductUsecase{
-		db:                db,
-		redis:             redis,
 		productRepository: product.NewProductRepository(db.GetDB(), redis),
 	}
 }
