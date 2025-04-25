@@ -1,0 +1,46 @@
+version: "2.1"
+
+services:
+  mysql:
+    image: mysql:8.0.29
+    environment:
+      MYSQL_ROOT_PASSWORD: 12345
+      MYSQL_DATABASE: db
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: 12345
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./localstack-data/mysql:/var/lib/mysql
+      - ./localstack-data/mysql-init:/docker-entrypoint-initdb.d
+    security_opt:
+      - seccomp:unconfined
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    links:
+      - mysql
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+    restart: always
+    ports:
+      - 9090:80
+  backend:
+    image: product-recommendation:latest
+    ports:
+      - 8080:8080
+    depends_on:
+      - mysql
+      - redis
+    volumes:
+      - "./log:/var/log"
+      - "./config.yml:/app/config.yml:ro"
+  redis:
+    image: redis:latest
+    environment:
+      - REDIS_PASSWORD=12345
+    ports:
+      - 6379:6379
+    volumes:
+      - ./localstack-data/redis:/data

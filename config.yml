@@ -1,0 +1,66 @@
+# general settings
+settings:
+  jwt_secret: p@ssWord0
+  # JWT token will expire after {this value} seconds
+  access_token_expire_sec: 86400
+  # an encryption key used to encrypt data, should be a 32 character long hex string
+  data_encryption_key: 9264c34968014d06225eb3a0704c8daf
+  # limit maximum concurrent requests processed by backend, more requests will be
+  # please use positive value to enable, or disable with 0 or negative value
+  concurrency: 100
+  # length of OTP
+  otp_length: 6
+
+
+db:
+  # database configuration
+  user: admin
+  password: 12345
+  host: mysql
+  port: 3306
+  name: db
+
+redis:
+  host: redis
+  port: 6379
+  password: 12345
+  db: 0
+
+server:
+  host: 0.0.0.0
+  port: 8080
+  # old log will automatically compressed if this option set to true
+  enable_rotate_log: true
+  # allow web front-end hosted in different domain to connect to hub
+  enable_cors: true
+  # only take effect if enable_cors set to true
+  # list of origins that are allowed to connect to hub server
+  allow_origins:
+    - "http://localhost:8000"
+
+log_file:
+  # path for log file, you can set this value to relative or absolute path
+  file_name: temp
+  # max size for single log file, size in Megabytes
+  # if you set to zero, default value is 100 MB
+  max_size: 100
+  # max log files to keep
+  # default value is 30, if you set to zero, will never delete old logs
+  max_backups: 30
+  # how many days should we keep log files
+  # default value is 30 days, if you set to zero, will never delete old logs
+  max_age: 30
+
+email_service:
+  # hostname and port of your email service
+  #host: smtp.gmail.com:587
+  host: smtp.gmail.com:587
+  # email address and password of sender
+  account: "gmail account"
+  password: "password"
+  # name of sender
+  display_name: OTP Sender
+  # prefix of subject
+  subject_prefix: "[OTP]"
+
+
